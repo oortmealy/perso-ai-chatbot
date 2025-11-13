@@ -1,31 +1,36 @@
 import { createTheme } from '@mui/material/styles';
-import { grey, blueGrey, brown } from '@mui/material/colors';
+
+// Custom color palette
+const deepNavy = 'rgb(31, 27, 56)';
+const blueViolet = 'rgb(130, 102, 225)';
+const purpleGradient = 'rgb(100, 74, 134)';
+const pinkPurple = 'rgb(184, 127, 174)';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: blueGrey[600], // A neutral blue-grey for primary actions
-      light: blueGrey[400],
-      dark: blueGrey[800],
-      contrastText: '#ffffff', // Ensure white text on primary background
+      main: blueViolet, // 선명한 블루-바이올렛
+      light: pinkPurple, // 핑크-퍼플 하이라이트
+      dark: purpleGradient, // 보라빛 그라데이션 중간톤
+      contrastText: '#ffffff',
     },
     secondary: {
-      main: brown[400], // A warm brown for secondary actions
-      light: brown[200],
-      dark: brown[600],
+      main: pinkPurple, // 핑크-퍼플 하이라이트
+      light: 'rgb(200, 160, 200)',
+      dark: purpleGradient,
     },
     background: {
-      default: grey[100], // Light grey for the overall background
-      paper: '#ffffff', // White for paper components
+      default: '#f5f5f5', // 밝은 회색 배경
+      paper: '#ffffff', // 흰색 페이퍼
     },
     text: {
-      primary: grey[900],
-      secondary: grey[600],
+      primary: deepNavy, // 진한 남보라를 텍스트 색상으로
+      secondary: purpleGradient, // 보라빛 그라데이션을 보조 텍스트로
     },
-    divider: grey[200],
+    divider: 'rgba(130, 102, 225, 0.2)',
     action: {
-      selected: blueGrey[50],
-      hover: grey[50],
+      selected: 'rgba(130, 102, 225, 0.1)',
+      hover: 'rgba(184, 127, 174, 0.08)',
     },
     error: {
       main: '#ef5350',
@@ -79,15 +84,15 @@ const theme = createTheme({
         root: {
           '& .MuiOutlinedInput-root': {
             borderRadius: 10,
-            backgroundColor: grey[50],
+            backgroundColor: 'rgba(100, 74, 134, 0.2)',
             '& fieldset': {
-              borderColor: grey[200],
+              borderColor: 'rgba(130, 102, 225, 0.3)',
             },
             '&:hover fieldset': {
-              borderColor: grey[400],
+              borderColor: 'rgba(130, 102, 225, 0.5)',
             },
             '&.Mui-focused fieldset': {
-              borderColor: blueGrey[500],
+              borderColor: blueViolet,
               borderWidth: '1px',
             },
           },
@@ -100,7 +105,7 @@ const theme = createTheme({
           borderRadius: 8,
           margin: '0 8px',
           '&.Mui-selected': {
-            borderLeft: `4px solid ${blueGrey[500]}`,
+            borderLeft: `4px solid ${blueViolet}`,
             borderRadius: 0,
             marginLeft: 0,
             paddingLeft: 18,
