@@ -1,7 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from core.db import setup_database, find_similar_question
+from core.db import setup_database, find_similar_questions
+from core.llm import generate_answer_with_context
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -32,18 +33,21 @@ def on_startup():
 @app.post("/api/chat")
 def chat(request: ChatRequest):
     """
-    Chat endpoint that receives a question and returns the most similar answer.
+    Chat endpoint that receives a question and returns an AI-generated answer
+    based on similar questions from the vector database.
     """
     if not request.question:
         raise HTTPException(status_code=400, detail="Question cannot be empty.")
-    
-    answer = find_similar_question(request.question)
-    
-    if answer is None:
-        # As per requirements, if no similar answer is found, we should indicate that.
-        # Returning a specific message instead of a 404 might be better for the UI.
+
+    # Find top-3 similar questions from vector DB
+    qa_contexts = find_similar_questions(request.question, top_k=3)
+
+    if not qa_contexts:
         return {"answer": "죄송합니다, 질문에 대한 답변을 찾을 수 없습니다."}
-        
+
+    # Generate answer using LLM with context
+    answer = generate_answer_with_context(request.question, qa_contexts)
+
     return {"answer": answer}
 
 @app.get("/")

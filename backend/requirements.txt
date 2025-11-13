@@ -5,3 +5,4 @@ openpyxl
 sentence-transformers
 chromadb
 python-dotenv
+google-generativeai

@@ -37,18 +37,16 @@ def setup_database():
     )
     print("Database populated successfully.")
 
-def find_similar_question(query: str, top_k: int = 1, distance_threshold: float = 1.5):
+def find_similar_questions(query: str, top_k: int = 3):
     """
-    Finds the most similar question(s) in the database to the given query.
+    Finds the top-k most similar questions in the database to the given query.
 
     Args:
         query: User's question
-        top_k: Number of top results to return
-        distance_threshold: Maximum distance to consider a match (lower = more similar)
-                          Default 1.5 allows reasonably similar questions
+        top_k: Number of top results to return (default 3)
 
     Returns:
-        Answer string if similar question found, None otherwise
+        List of (question, answer) tuples, or empty list if no results
     """
     query_embedding = get_embedding(query)
 
@@ -58,16 +56,13 @@ def find_similar_question(query: str, top_k: int = 1, distance_threshold: float 
     )
 
     if not results or not results['ids'][0]:
-        return None
+        return []
 
-    # Check the distance/similarity score
-    # ChromaDB returns distances (lower is better)
-    distance = results['distances'][0][0] if results['distances'] else float('inf')
+    # Extract questions and answers
+    qa_pairs = []
+    for i in range(len(results['ids'][0])):
+        question = results['documents'][0][i]
+        answer = results['metadatas'][0][i]['answer']
+        qa_pairs.append((question, answer))
 
-    # If distance is too high, the query is not similar enough
-    if distance > distance_threshold:
-        return None
-
-    # Return the answer from the most similar result
-    most_similar_metadata = results['metadatas'][0][0]
-    return most_similar_metadata.get('answer')
+    return qa_pairs
