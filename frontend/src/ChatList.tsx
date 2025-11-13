@@ -11,7 +11,6 @@ import {
   ListItemAvatar,
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 // Re-defining interfaces from App.tsx for clarity in this file
 interface Message {
@@ -82,9 +81,7 @@ const ChatList: React.FC<ChatListProps> = ({ chats, selectedChatId, onSelectChat
             }}
           >
             <ListItemAvatar>
-              <Avatar sx={{ bgcolor: 'primary.main' }}>
-                <ChatBubbleOutlineIcon />
-              </Avatar>
+              <Avatar src="/assets/bot-profile.png" sx={{ bgcolor: 'transparent' }} />
             </ListItemAvatar>
             <ListItemText
               primary={chat.name}

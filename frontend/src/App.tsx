@@ -157,7 +157,7 @@ function App() {
               Perso.ai 챗봇
             </Typography>
             <IconButton onClick={handleMenuOpen} sx={{ p: 0 }}>
-              <Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main' }}>U</Avatar>
+              <Avatar src="/assets/user-profile.png" sx={{ width: 32, height: 32, bgcolor: 'transparent' }} />
             </IconButton>
             <Menu
               anchorEl={anchorEl}

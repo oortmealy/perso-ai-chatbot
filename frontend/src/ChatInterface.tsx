@@ -95,9 +95,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 }}
               >
                 {message.sender === 'bot' && (
-                  <Avatar sx={{ mr: 1, width: 32, height: 32, bgcolor: 'primary.main' }}>
-                    P
-                  </Avatar>
+                  <Avatar
+                    src="/assets/bot-profile.png"
+                    sx={{ mr: 1, width: 32, height: 32, bgcolor: 'transparent' }}
+                  />
                 )}
                 <Paper
                   variant="outlined"
@@ -131,9 +132,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                   />
                 </Paper>
                 {message.sender === 'user' && (
-                  <Avatar sx={{ ml: 1, width: 32, height: 32, bgcolor: 'secondary.main' }}>
-                    U
-                  </Avatar>
+                  <Avatar
+                    src="/assets/user-profile.png"
+                    sx={{ ml: 1, width: 32, height: 32, bgcolor: 'transparent' }}
+                  />
                 )}
               </ListItem>
             ))}
