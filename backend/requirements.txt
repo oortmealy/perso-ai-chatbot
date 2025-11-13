@@ -6,3 +6,4 @@ sentence-transformers
 chromadb
 python-dotenv
 google-generativeai
+numpy<2.0
