@@ -7,6 +7,7 @@ const theme = createTheme({
       main: blueGrey[600], // A neutral blue-grey for primary actions
       light: blueGrey[400],
       dark: blueGrey[800],
+      contrastText: '#ffffff', // Ensure white text on primary background
     },
     secondary: {
       main: brown[400], // A warm brown for secondary actions

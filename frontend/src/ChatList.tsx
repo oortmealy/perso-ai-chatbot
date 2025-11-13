@@ -1,18 +1,17 @@
 import React from 'react';
 import {
   List,
-  ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
   Divider,
   Box,
   Typography,
   Avatar,
   Button,
-  ListItemAvatar, // <--- Add this import
+  ListItemAvatar,
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 // Re-defining interfaces from App.tsx for clarity in this file
 interface Message {
@@ -24,9 +23,6 @@ interface Message {
 interface Chat {
   id: string;
   name: string;
-  avatarSrc: string;
-  botName: string;
-  botAvatarSrc: string;
   messages: Message[];
   lastMessageSnippet: string;
 }
@@ -86,13 +82,17 @@ const ChatList: React.FC<ChatListProps> = ({ chats, selectedChatId, onSelectChat
             }}
           >
             <ListItemAvatar>
-              <Avatar alt={chat.name} src={chat.avatarSrc} />
+              <Avatar sx={{ bgcolor: 'primary.main' }}>
+                <ChatBubbleOutlineIcon />
+              </Avatar>
             </ListItemAvatar>
             <ListItemText
               primary={chat.name}
               secondary={chat.lastMessageSnippet}
-              primaryTypographyProps={{ fontWeight: 500 }}
-              secondaryTypographyProps={{ noWrap: true, variant: 'body2', color: 'text.secondary' }}
+              slotProps={{
+                primary: { style: { fontWeight: 500 } },
+                secondary: { noWrap: true, variant: 'body2', color: 'text.secondary' }
+              }}
             />
           </ListItemButton>
         ))}

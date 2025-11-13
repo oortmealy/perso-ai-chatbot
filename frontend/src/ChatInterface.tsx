@@ -20,15 +20,23 @@ interface Message {
   text: string;
 }
 
-interface ChatInterfaceProps {
+interface Chat {
+  id: string;
+  name: string;
   messages: Message[];
-  onSendMessage: (text: string) => void;
+  lastMessageSnippet: string;
+}
+
+interface ChatInterfaceProps {
+  currentChat: Chat;
+  onSendMessage: (chatId: string, text: string) => void;
 }
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({
-  messages,
+  currentChat,
   onSendMessage,
 }) => {
+  const messages = currentChat.messages;
   const [inputMessage, setInputMessage] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -39,7 +47,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
   const handleSendMessage = () => {
     if (inputMessage.trim() === '') return;
-    onSendMessage(inputMessage.trim());
+    onSendMessage(currentChat.id, inputMessage.trim());
     setInputMessage('');
   };
 
