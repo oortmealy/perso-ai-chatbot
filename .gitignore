@@ -26,5 +26,3 @@ dist/
 # ChromaDB
 backend/.chroma_db/
 
-# Confidential data
-data/
