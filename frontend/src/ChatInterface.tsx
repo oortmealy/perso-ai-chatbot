@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   Box,
   TextField,
@@ -14,32 +14,19 @@ import {
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
-// Re-defining interfaces from App.tsx for clarity in this file
 interface Message {
   id: string;
   sender: 'user' | 'bot';
   text: string;
 }
 
-interface Chat {
-  id: string;
-  name: string;
-  avatarSrc: string;
-  botName: string;
-  botAvatarSrc: string;
-  messages: Message[];
-  lastMessageSnippet: string;
-}
-
 interface ChatInterfaceProps {
-  currentChat: Chat;
-  currentUserAvatar: string;
-  onSendMessage: (chatId: string, text: string) => void;
+  messages: Message[];
+  onSendMessage: (text: string) => void;
 }
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({
-  currentChat,
-  currentUserAvatar,
+  messages,
   onSendMessage,
 }) => {
   const [inputMessage, setInputMessage] = useState<string>('');
@@ -48,11 +35,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   useEffect(() => {
     // Scroll to the latest message
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [currentChat.messages]); // Re-scroll whenever messages in the current chat change
+  }, [messages]);
 
   const handleSendMessage = () => {
     if (inputMessage.trim() === '') return;
-    onSendMessage(currentChat.id, inputMessage.trim());
+    onSendMessage(inputMessage.trim());
     setInputMessage('');
   };
 
@@ -65,7 +52,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   return (
     <Box
       sx={{
-        flexGrow: 1, // Allows ChatInterface to take remaining space
+        flexGrow: 1,
         display: 'flex',
         flexDirection: 'column',
         bgcolor: 'background.default',
@@ -75,8 +62,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       <Paper
         elevation={6}
         sx={{
-          width: '100%', // Takes full width of its flex container
-          maxWidth: { xs: '95%', sm: '100%' }, // Responsive max-width
+          width: '100%',
+          maxWidth: { xs: '95%', sm: '100%' },
           height: '100%',
           borderRadius: 3,
           display: 'flex',
@@ -84,12 +71,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           overflow: 'hidden',
           boxShadow: `0px 8px 24px ${alpha('#000', 0.1)}`,
           bgcolor: 'background.paper',
-          mx: { xs: 'auto', sm: 0 }, // Center horizontally on small screens
+          mx: { xs: 'auto', sm: 0 },
         }}
       >
         <Box sx={{ flexGrow: 1, overflowY: 'auto', p: 2 }}>
           <List>
-            {currentChat.messages.map((message) => (
+            {messages.map((message) => (
               <ListItem
                 key={message.id}
                 sx={{
@@ -100,7 +87,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 }}
               >
                 {message.sender === 'bot' && (
-                  <Avatar alt={currentChat.botName} src={currentChat.botAvatarSrc} sx={{ mr: 1, width: 32, height: 32 }} />
+                  <Avatar sx={{ mr: 1, width: 32, height: 32, bgcolor: 'primary.main' }}>
+                    P
+                  </Avatar>
                 )}
                 <Paper
                   variant="outlined"
@@ -124,6 +113,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                           fontWeight: 400,
                           lineHeight: 1.4,
                           color: message.sender === 'user' ? 'primary.dark' : 'text.primary',
+                          whiteSpace: 'pre-wrap',
                         }}
                       >
                         {message.text}
@@ -133,7 +123,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                   />
                 </Paper>
                 {message.sender === 'user' && (
-                  <Avatar alt="You" src={currentUserAvatar} sx={{ ml: 1, width: 32, height: 32 }} />
+                  <Avatar sx={{ ml: 1, width: 32, height: 32, bgcolor: 'secondary.main' }}>
+                    U
+                  </Avatar>
                 )}
               </ListItem>
             ))}
@@ -153,7 +145,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           <TextField
             fullWidth
             variant="outlined"
-            placeholder="Type your message..."
+            placeholder="Perso.ai에 대해 질문해보세요..."
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyPress={handleKeyPress}
@@ -175,7 +167,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
               minWidth: 'auto',
               px: 2,
               py: 1,
-              backgroundColor: 'primary.main', // Using theme primary color
+              backgroundColor: 'primary.main',
               '&:hover': {
                 backgroundColor: 'primary.dark',
               },
