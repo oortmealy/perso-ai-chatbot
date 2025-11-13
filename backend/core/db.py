@@ -37,21 +37,37 @@ def setup_database():
     )
     print("Database populated successfully.")
 
-def find_similar_question(query: str, top_k: int = 1):
+def find_similar_question(query: str, top_k: int = 1, distance_threshold: float = 1.5):
     """
     Finds the most similar question(s) in the database to the given query.
+
+    Args:
+        query: User's question
+        top_k: Number of top results to return
+        distance_threshold: Maximum distance to consider a match (lower = more similar)
+                          Default 1.5 allows reasonably similar questions
+
+    Returns:
+        Answer string if similar question found, None otherwise
     """
     query_embedding = get_embedding(query)
-    
+
     results = collection.query(
         query_embeddings=[query_embedding],
         n_results=top_k
     )
-    
+
     if not results or not results['ids'][0]:
         return None
 
-    # The result contains distances, metadatas, documents, etc.
-    # We want the answer from the metadata of the most similar result.
+    # Check the distance/similarity score
+    # ChromaDB returns distances (lower is better)
+    distance = results['distances'][0][0] if results['distances'] else float('inf')
+
+    # If distance is too high, the query is not similar enough
+    if distance > distance_threshold:
+        return None
+
+    # Return the answer from the most similar result
     most_similar_metadata = results['metadatas'][0][0]
     return most_similar_metadata.get('answer')
