@@ -1,8 +1,7 @@
 from pathlib import Path
 
-# Project root directory
-ROOT_DIR = Path(__file__).resolve().parent.parent.parent
-BACKEND_DIR = ROOT_DIR / "backend"
+# Backend directory (two levels up from this file)
+BACKEND_DIR = Path(__file__).resolve().parent.parent
 
 # Path to the data file (moved under backend/data)
 DATA_FILE_PATH = BACKEND_DIR / "data" / "Q&A.xlsx"
