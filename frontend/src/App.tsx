@@ -150,8 +150,8 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ display: 'flex', height: '100vh', flexDirection: 'column', bgcolor: 'background.default' }}>
-        <AppBar position="static" elevation={2} sx={{ bgcolor: 'background.paper', borderBottom: '1px solid', borderColor: 'divider' }}>
+      <Box sx={{ display: 'flex', height: '100vh', flexDirection: 'column', bgcolor: 'background.default', overflow: 'hidden' }}>
+        <AppBar position="static" elevation={2} sx={{ bgcolor: 'background.paper', borderBottom: '1px solid', borderColor: 'divider', flexShrink: 0 }}>
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 700, color: 'primary.main' }}>
               Perso.ai 챗봇
@@ -177,7 +177,7 @@ function App() {
             </Menu>
           </Toolbar>
         </AppBar>
-        <Box sx={{ display: 'flex', flexGrow: 1 }}>
+        <Box sx={{ display: 'flex', flexGrow: 1, overflow: 'hidden' }}>
           <ChatList
             chats={chats}
             selectedChatId={selectedChatId}
