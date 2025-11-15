@@ -41,6 +41,7 @@ function App() {
   ]);
   const [selectedChatId, setSelectedChatId] = useState<string>('1');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const selectedChat = chats.find((chat) => chat.id === selectedChatId);
 
@@ -84,6 +85,9 @@ function App() {
           : chat
       )
     );
+
+    // Start loading
+    setIsLoading(true);
 
     // Call backend API
     try {
@@ -136,6 +140,9 @@ function App() {
             : chat
         )
       );
+    } finally {
+      // Stop loading
+      setIsLoading(false);
     }
   };
 
@@ -188,6 +195,7 @@ function App() {
             <ChatInterface
               currentChat={selectedChat}
               onSendMessage={handleSendMessage}
+              isLoading={isLoading}
             />
           ) : (
             <Box
