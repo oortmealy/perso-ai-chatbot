@@ -11,6 +11,8 @@ import {
   Typography,
   Stack,
   alpha,
+  CircularProgress,
+  Fade,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
@@ -30,11 +32,13 @@ interface Chat {
 interface ChatInterfaceProps {
   currentChat: Chat;
   onSendMessage: (chatId: string, text: string) => void;
+  isLoading?: boolean;
 }
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({
   currentChat,
   onSendMessage,
+  isLoading = false,
 }) => {
   const messages = currentChat.messages;
   const [inputMessage, setInputMessage] = useState<string>('');
@@ -43,7 +47,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   useEffect(() => {
     // Scroll to the latest message
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, isLoading]);
 
   const handleSendMessage = () => {
     if (inputMessage.trim() === '') return;
@@ -139,6 +143,42 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 )}
               </ListItem>
             ))}
+            {/* Bot Typing Indicator */}
+            <Fade in={isLoading} unmountOnExit>
+              <ListItem
+                sx={{
+                  justifyContent: 'flex-start',
+                  px: 0,
+                  py: 1,
+                  alignItems: 'flex-start',
+                }}
+              >
+                <Avatar
+                  src="/assets/bot-profile.png"
+                  sx={{ mr: 1, width: 32, height: 32, bgcolor: 'transparent' }}
+                />
+                <Paper
+                  variant="outlined"
+                  sx={{
+                    p: 1.5,
+                    borderRadius: 3,
+                    maxWidth: '80%',
+                    bgcolor: '#f5f5f5',
+                    color: 'text.primary',
+                    borderColor: '#e0e0e0',
+                    borderWidth: '1px',
+                    borderStyle: 'solid',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <CircularProgress size={20} sx={{ mr: 1 }} />
+                  <Typography variant="body2" sx={{ fontWeight: 400, lineHeight: 1.4 }}>
+                    답변을 생성하고 있습니다...
+                  </Typography>
+                </Paper>
+              </ListItem>
+            </Fade>
             <div ref={messagesEndRef} />
           </List>
         </Box>
