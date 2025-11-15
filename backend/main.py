@@ -20,6 +20,9 @@ app.add_middleware(
 class ChatRequest(BaseModel):
     question: str
 
+class TitleRequest(BaseModel):
+    message: str
+
 @app.on_event("startup")
 def on_startup():
     """
@@ -51,6 +54,45 @@ def chat(request: ChatRequest):
     answer = generate_answer_with_context(request.question, qa_contexts)
 
     return {"answer": answer}
+
+@app.post("/api/generate-title")
+def generate_title(request: TitleRequest):
+    """
+    Generate a chat title based on the first user message
+    """
+    from core.llm import model
+
+    if not request.message:
+        raise HTTPException(status_code=400, detail="Message cannot be empty.")
+
+    if not model:
+        # Fallback if no API key
+        return {"title": request.message[:30] + "..." if len(request.message) > 30 else request.message}
+
+    try:
+        prompt = f"""다음 사용자 메시지를 바탕으로 짧고 간결한 채팅 제목을 생성해주세요.
+규칙:
+1. 15자 이내로 작성
+2. 핵심 주제만 간단히 표현
+3. 특수문자나 따옴표 없이 작성
+4. 존댓말 사용 안함
+
+사용자 메시지: {request.message}
+
+제목:"""
+
+        response = model.generate_content(prompt)
+        title = response.text.strip()
+
+        # 길이 제한
+        if len(title) > 20:
+            title = title[:20] + "..."
+
+        return {"title": title}
+    except Exception as e:
+        print(f"Title generation error: {e}")
+        # Fallback
+        return {"title": request.message[:30] + "..." if len(request.message) > 30 else request.message}
 
 @app.get("/")
 def read_root():
