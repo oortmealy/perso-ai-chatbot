@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 # Backend directory (two levels up from this file)
@@ -10,5 +11,6 @@ DATA_FILE_PATH = BACKEND_DIR / "data" / "Q&A.xlsx"
 EMBEDDING_MODEL = "jhgan/ko-sroberta-multitask"
 
 # ChromaDB settings
-CHROMA_PERSIST_DIR = str(BACKEND_DIR / ".chroma_db")
+# Use /data directory in production (Railway) for persistence, otherwise use local .chroma_db
+CHROMA_PERSIST_DIR = os.getenv("CHROMA_PERSIST_DIR", str(BACKEND_DIR / ".chroma_db"))
 CHROMA_COLLECTION_NAME = "chatbot_qa"

@@ -64,13 +64,18 @@ def setup_database(async_mode: bool = False):
     Args:
         async_mode: When True, population runs in a background thread so startup returns immediately.
     """
-    if collection.count() > 0:
-        global _db_ready
+    global _db_ready
+
+    # Check if collection already has data
+    count = collection.count()
+    if count > 0:
         _db_ready = True
-        print("Database already populated.")
+        print(f"Database already populated with {count} items.")
         return
 
+    # If no data, populate in background or foreground
     if async_mode:
+        print("Starting database population in background...")
         Thread(target=_populate_database, daemon=True).start()
     else:
         _populate_database()
