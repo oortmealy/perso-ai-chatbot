@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import ChatInterface from './ChatInterface';
 import ChatList from './ChatList';
+import SplashIntro from './SplashIntro';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from './theme';
@@ -21,8 +22,9 @@ interface Chat {
   lastMessageSnippet: string;
 }
 
-// API endpoint
+// API endpoints
 const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api/chat';
+const TITLE_API_URL = import.meta.env.VITE_TITLE_API_URL || 'http://127.0.0.1:8000/api/generate-title';
 
 function App() {
   const [chats, setChats] = useState<Chat[]>([
@@ -42,6 +44,7 @@ function App() {
   const [selectedChatId, setSelectedChatId] = useState<string>('1');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showSplash, setShowSplash] = useState<boolean>(true);
 
   const selectedChat = chats.find((chat) => chat.id === selectedChatId);
 
@@ -74,6 +77,10 @@ function App() {
       text: text,
     };
 
+    // Check if this is the first user message (only bot greeting exists)
+    const currentChat = chats.find(chat => chat.id === chatId);
+    const isFirstMessage = currentChat && currentChat.messages.length === 1 && currentChat.messages[0].sender === 'bot';
+
     setChats((prevChats) =>
       prevChats.map((chat) =>
         chat.id === chatId
@@ -88,6 +95,36 @@ function App() {
 
     // Start loading
     setIsLoading(true);
+
+    // Generate title for first message
+    if (isFirstMessage) {
+      try {
+        const titleResponse = await fetch(TITLE_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ message: text }),
+        });
+
+        if (titleResponse.ok) {
+          const titleData = await titleResponse.json();
+          setChats((prevChats) =>
+            prevChats.map((chat) =>
+              chat.id === chatId
+                ? {
+                    ...chat,
+                    name: titleData.title,
+                  }
+                : chat
+            )
+          );
+        }
+      } catch (error) {
+        console.error('Error generating title:', error);
+        // Continue without title update
+      }
+    }
 
     // Call backend API
     try {
@@ -154,6 +191,26 @@ function App() {
     setAnchorEl(null);
   };
 
+  const handleTitleAnimationComplete = () => {
+    // Title animation complete
+  };
+
+  const handleStartChatClick = () => {
+    setShowSplash(false);
+  };
+
+  if (showSplash) {
+    return (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <SplashIntro
+          onTitleAnimationComplete={handleTitleAnimationComplete}
+          onStartChatClick={handleStartChatClick}
+        />
+      </ThemeProvider>
+    );
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -161,7 +218,7 @@ function App() {
         <AppBar position="static" elevation={2} sx={{ bgcolor: 'background.paper', borderBottom: '1px solid', borderColor: 'divider', flexShrink: 0 }}>
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 700, color: 'primary.main' }}>
-              Perso.ai 챗봇
+              Perso Q&A
             </Typography>
             <IconButton onClick={handleMenuOpen} sx={{ p: 0 }}>
               <Avatar src="/assets/user-profile.png" sx={{ width: 32, height: 32, bgcolor: 'transparent' }} />
