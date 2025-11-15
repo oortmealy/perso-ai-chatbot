@@ -20,6 +20,7 @@ interface Chat {
   name: string;
   messages: Message[];
   lastMessageSnippet: string;
+  isLoading?: boolean;
 }
 
 // API endpoints
@@ -43,7 +44,6 @@ function App() {
   ]);
   const [selectedChatId, setSelectedChatId] = useState<string>('1');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showSplash, setShowSplash] = useState<boolean>(true);
 
   const selectedChat = chats.find((chat) => chat.id === selectedChatId);
@@ -93,8 +93,12 @@ function App() {
       )
     );
 
-    // Start loading
-    setIsLoading(true);
+    // Start loading for this specific chat
+    setChats((prevChats) =>
+      prevChats.map((chat) =>
+        chat.id === chatId ? { ...chat, isLoading: true } : chat
+      )
+    );
 
     // Generate title for first message
     if (isFirstMessage) {
@@ -178,8 +182,12 @@ function App() {
         )
       );
     } finally {
-      // Stop loading
-      setIsLoading(false);
+      // Stop loading for this specific chat
+      setChats((prevChats) =>
+        prevChats.map((chat) =>
+          chat.id === chatId ? { ...chat, isLoading: false } : chat
+        )
+      );
     }
   };
 
@@ -252,7 +260,7 @@ function App() {
             <ChatInterface
               currentChat={selectedChat}
               onSendMessage={handleSendMessage}
-              isLoading={isLoading}
+              isLoading={selectedChat.isLoading || false}
             />
           ) : (
             <Box
