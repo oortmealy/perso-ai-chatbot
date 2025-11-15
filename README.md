@@ -1,12 +1,15 @@
 # Perso AI Chatbot
 
-[![Release](https://img.shields.io/badge/release-v1.1.0-blue)](https://github.com/yourusername/perso-ai-chatbot/releases/tag/v1.1.0)
+[![Release](https://img.shields.io/badge/release-v1.1.1-blue)](https://github.com/yourusername/perso-ai-chatbot/releases/tag/v1.1.1)
 
 Perso.ai 벡터 데이터베이스(Vector DB)를 활용한 지식기반 챗봇 시스템입니다. FastAPI 백엔드가 Q&A 엑셀 데이터를 임베딩하여 벡터 DB(ChromaDB)에 저장하고, React + MUI 컴포넌트로 UI/UX를 구성했습니다. Gemini API를 사용하여 벡터 검색 결과를 맥락으로 자연스러운 답변을 생성합니다.
-<img width="500" height="400" alt="image" src="https://github.com/user-attachments/assets/eb7fe054-cd37-48cb-800c-47ebbb7b0f38" />
-<img width="500" height="400" alt="image" src="https://github.com/user-attachments/assets/b6a0c32e-3ee8-4609-93ae-af990cc672a1" />
+<img width="400" height="320" alt="image" src="https://github.com/user-attachments/assets/eb7fe054-cd37-48cb-800c-47ebbb7b0f38" />
+<img width="400" height="320" alt="image" src="https://github.com/user-attachments/assets/b6a0c32e-3ee8-4609-93ae-af990cc672a1" />
 
 ## 릴리즈 노트
+### v1.1.1
+**버그 수정**
+-  로딩 인디케이터 버그 수정 : 전역 상태 관리에서 채팅별 개별 상태 관리로 변경, `Chat` 인터페이스에 `isLoading' 속성 추가
 
 ### v1.1.0
 **새로운 기능**
