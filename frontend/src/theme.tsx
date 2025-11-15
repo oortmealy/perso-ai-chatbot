@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material/styles';
 
 // Custom color palette
 const deepNavy = 'rgb(31, 27, 56)';
-const blueViolet = 'rgb(130, 102, 225)';
+const blueViolet = '#624AFF';
 const purpleGradient = 'rgb(100, 74, 134)';
 const pinkPurple = 'rgb(184, 127, 174)';
 
